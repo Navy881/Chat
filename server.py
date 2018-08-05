@@ -127,7 +127,7 @@ def main():
 if __name__ == "__main__":
     # Параметры
     HOST = "localhost"
-    PORT = 9090
+    PORT = 9080
     QUEUE = 1
     DATASIZE = 1024
 
