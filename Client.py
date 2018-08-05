@@ -16,7 +16,7 @@ def insertText():
 def WriteMSG(event=NONE):
     msg = my_msg.get()
     my_msg.set("")  # Clears input field.
-    sock.send(bytes(msg+'\n', "utf8"))
+    sock.send(bytes(msg, "utf8"))
     if msg == "{quit}":
         sock.close()
         chat.quit()
@@ -32,7 +32,7 @@ name=StringVar()
 name.set("Ваше имя")
 my_msg= StringVar()
 my_msg.set(" ")
-text = Text(POLE, bg="white", fg='green')#создал окно с текстом, тут указаны его размеры и цвета
+text = Listbox(POLE,height=30,width=106, bg="white", fg='green')#создал окно с текстом, тут указаны его размеры и цвета
 scroll = Scrollbar(POLE,command=text.yview)#Scrollbar. Объект-скроллер связывает с виджетом, которому он требуется, прокрутка экрана привязана к текстовому окну
 scroll.pack(side=RIGHT, fill=Y)#прокрутка по оси Y, находится с права
 text.config(yscrollcommand=scroll.set)
