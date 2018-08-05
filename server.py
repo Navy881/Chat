@@ -17,7 +17,7 @@ import _thread
 '''
 Метод для обработки сообщений нового клиента + отправка всем
 '''
-def communication(conn, conns, clients):
+def communication(conn):
     while True:
         try:
             # Получение сообщение из сокета клиента
@@ -66,7 +66,7 @@ def remove_client(conn, conns, clients):
 '''
 Метод добавления нового клиента из списка
 '''
-def add_new_client(conn, addr, conns, clients):
+def add_new_client(conn, addr, i):
     # Отправка запроса имени клиента
     conn.send(bytes(">>> Server: Hello! What is your name?", "utf8"))
     # Получение имени
@@ -75,9 +75,30 @@ def add_new_client(conn, addr, conns, clients):
     clients[conn] = client_name
     # Запоминаем адрес и сокет клиента
     conns[conn] = addr
+
+    # Отпрвка сообщения приветствия клиенту
     welcome_message = ">>> Server: Welcome %s " % client_name
     conn.send(bytes(welcome_message, "utf8"))
-    return client_name
+
+    # Вывод информации о подключении
+    print('\nNew connection:\n    '
+          'client name: {}\n    '
+          'client address: {}\n    '
+          'client socket: {}'.format(client_name, addr, conn))
+    print('------------\nClients online {}:'.format(len(clients)))
+    for cl in clients.values():
+        print("    {} client - {}".format(i, cl))
+        i += 1
+    print('------------')
+
+    # Отправка всем сообщеия о подключении новго клиента
+    new_client_message = ">>> Server: %s join to chat" % client_name
+    for client_socket in conns.keys():
+        # Отправляем на каждый сокет полученное сообщение
+        client_socket.send(bytes(new_client_message, "utf8"))
+
+    # Запуск общения с новым клиентом
+    communication(conn)
 
 
 '''
@@ -97,28 +118,8 @@ def main():
             # Принимаем подключение с помощью accept(), которое возвращает кортеж из двух
             # значений: нового сокета и адреса клиента
             conn, addr = sock.accept()
-            # Добавлене инфомрации о новом клиенте
-            client_name = add_new_client(conn, addr, conns, clients)
-
-            # Вывод информации о подключении
-            print('\nNew connection:\n    '
-                  'client name: {}\n    '
-                  'client address: {}\n    '
-                  'client socket: {}'.format(client_name, addr, conn))
-            print('------------\nClients online {}:'.format(len(clients)))
-            for cl in clients.values():
-                print ("    {} client - {}".format(i, cl))
-                i +=1
-            print('------------')
-
-            # Отправка всем сообщеиея о подключении новго клиента
-            new_client_message = ">>> Server: %s join to chat" % client_name
-            for client_socket in conns.keys():
-                # Отправляем на каждый сокет полученное сообщение
-                client_socket.send(bytes(new_client_message, "utf8"))
-
-            # Создание нового потока для общения с новым клиентом
-            _thread.start_new_thread(communication, (conn, conns, clients))
+            # Создание нового потока для добавления и общения с новым клиентом
+            _thread.start_new_thread(add_new_client, (conn, addr, i))
         except Exception as e:
             print("Error!", e)      
     conn.close()
