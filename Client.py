@@ -38,7 +38,7 @@ scroll.pack(side=RIGHT, fill=Y)#прокрутка по оси Y, находит
 text.config(yscrollcommand=scroll.set)
 
 
-#1
+#13
 POLE.pack(side='top',  expand=1)
 text.pack(side='top',  expand=1)
 panelFrame.pack(side='bottom', fill='x')
