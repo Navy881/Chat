@@ -37,7 +37,7 @@ scroll = Scrollbar(POLE,command=text.yview)#Scrollbar. Объект-скролл
 scroll.pack(side=RIGHT, fill=Y)#прокрутка по оси Y, находится с права
 text.config(yscrollcommand=scroll.set)
 
-
+#1
 POLE.pack(side='top',  expand=1)
 text.pack(side='top',  expand=1)
 panelFrame.pack(side='bottom', fill='x')
