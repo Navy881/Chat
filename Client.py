@@ -36,7 +36,7 @@ text = Listbox(POLE,height=30,width=106, bg="white", fg='green')#создал о
 scroll = Scrollbar(POLE,command=text.yview)#Scrollbar. Объект-скроллер связывает с виджетом, которому он требуется, прокрутка экрана привязана к текстовому окну
 scroll.pack(side=RIGHT, fill=Y)#прокрутка по оси Y, находится с права
 text.config(yscrollcommand=scroll.set)
-C:/Users/world/PycharmProjects/ChatSlot
+
 
 #1
 POLE.pack(side='top',  expand=1)
