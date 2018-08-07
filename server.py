@@ -20,8 +20,8 @@ import _thread
 def communication(conn):
     while True:
         try:
-            # Получение сообщение из сокета клиента
-            data = conn.recv(DATASIZE).decode()
+            # Получение сообщение из сокета клиента  + удалене проблелов в начале и конце строки (strip())
+            data = conn.recv(DATASIZE).decode().strip()
             if not data:
                 break
             # Формирование сообщеня для отправки
@@ -69,8 +69,22 @@ def remove_client(conn, conns, clients):
 def add_new_client(conn, addr, i):
     # Отправка запроса имени клиента
     conn.send(bytes(">>> Server: Hello! What is your name?", "utf8"))
-    # Получение имени
-    client_name = conn.recv(DATASIZE).decode()
+    # Получение имени + удалене проблелов в начале и конце строки (strip())
+    client_name = conn.recv(DATASIZE).decode().strip()
+    # Проверка занятости имени
+    nickname = False
+    while nickname is False:
+        # Если список имент не пустой
+        if len(clients) != 0:
+            for client_name_in_mem in clients.values():
+                # Сравнение полученного имени со список в нижнем регистре
+                if client_name.lower() == client_name_in_mem.lower():
+                    conn.send(bytes(">>> Server: Sorry, this name is already use. Try again.", "utf8"))
+                    client_name = conn.recv(DATASIZE).decode().strip()
+                else:
+                    nickname = True
+        else:
+            nickname = True
     # Запоминаем имя клиента
     clients[conn] = client_name
     # Запоминаем адрес и сокет клиента
